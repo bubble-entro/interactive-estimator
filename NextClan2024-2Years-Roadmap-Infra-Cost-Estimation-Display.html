@@ -1,0 +1,1247 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>NextClan 2024 - 2 Years Infrastructure Cost Estimation</title>
+  <style>
+    :root {
+      --bg-color: #0f172a;
+      --card-bg: #1e293b;
+      --card-border: #334155;
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+      --accent-blue: #38bdf8;
+      --accent-green: #34d399;
+      --accent-purple: #a78bfa;
+      --accent-orange: #fb923c;
+      --input-bg: #0f172a;
+      --input-border: #475569;
+      --table-header-bg: #1e293b;
+      --section-header-bg: #0f172a;
+      --row-hover: #26334d;
+      --tooltip-bg: #0f172a;
+      --tooltip-border: #38bdf8;
+      --shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.4);
+    }
+
+    [data-theme="light"] {
+      --bg-color: #f1f5f9;
+      --card-bg: #ffffff;
+      --card-border: #cbd5e1;
+      --text-main: #0f172a;
+      --text-muted: #64748b;
+      --accent-blue: #0284c7;
+      --accent-green: #059669;
+      --accent-purple: #7c3aed;
+      --accent-orange: #ea580c;
+      --input-bg: #f8fafc;
+      --input-border: #94a3b8;
+      --table-header-bg: #e2e8f0;
+      --section-header-bg: #f8fafc;
+      --row-hover: #f1f5f9;
+      --tooltip-bg: #ffffff;
+      --tooltip-border: #0284c7;
+      --shadow: 0 4px 15px -3px rgba(0, 0, 0, 0.1);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
+
+    body {
+      background-color: var(--bg-color);
+      color: var(--text-main);
+      padding: 2rem;
+      min-height: 100vh;
+      transition: background-color 0.3s, color 0.3s;
+    }
+
+    .container {
+      max-width: 1400px;
+      margin: 0 auto;
+    }
+
+    /* Header & Controls Bar */
+    header {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      padding: 1.5rem;
+      margin-bottom: 1.5rem;
+      box-shadow: var(--shadow);
+    }
+
+    .header-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1.25rem;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+
+    .brand-title {
+      font-size: 1.5rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      color: var(--accent-blue);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .brand-title span {
+      font-size: 0.85rem;
+      background: rgba(56, 189, 248, 0.15);
+      color: var(--accent-blue);
+      padding: 3px 10px;
+      border-radius: 20px;
+      font-weight: 600;
+    }
+
+    .controls-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 1rem;
+      margin-bottom: 1rem;
+    }
+
+    .control-group {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .control-group label {
+      font-size: 0.8rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--text-muted);
+    }
+
+    input, select {
+      background: var(--input-bg);
+      border: 1px solid var(--input-border);
+      color: var(--text-main);
+      padding: 8px 12px;
+      border-radius: 6px;
+      font-size: 0.9rem;
+      outline: none;
+      transition: border-color 0.2s;
+      width: 100%;
+    }
+
+    input:focus, select:focus {
+      border-color: var(--accent-blue);
+    }
+
+    .title-input {
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: var(--text-main);
+      border-color: var(--accent-blue);
+      background: rgba(56, 189, 248, 0.05);
+    }
+
+    .actions-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 10px;
+      border-top: 1px solid var(--card-border);
+      padding-top: 1rem;
+      margin-top: 0.5rem;
+    }
+
+    .btn-group {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    button {
+      background: var(--input-bg);
+      color: var(--text-main);
+      border: 1px solid var(--input-border);
+      padding: 8px 16px;
+      border-radius: 6px;
+      font-weight: 600;
+      font-size: 0.85rem;
+      cursor: pointer;
+      transition: all 0.2s;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    button:hover {
+      background: var(--card-border);
+    }
+
+    button.btn-primary {
+      background: var(--accent-blue);
+      color: #0f172a;
+      border-color: var(--accent-blue);
+    }
+
+    button.btn-primary:hover {
+      opacity: 0.9;
+    }
+
+    button.btn-success {
+      background: var(--accent-green);
+      color: #0f172a;
+      border-color: var(--accent-green);
+    }
+
+    /* Single Master Table Display */
+    .table-card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      overflow: visible;
+      box-shadow: var(--shadow);
+      margin-bottom: 1.5rem;
+    }
+
+    .table-header-title {
+      padding: 1.25rem 1.5rem;
+      background: var(--section-header-bg);
+      border-bottom: 2px solid var(--accent-blue);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-top-left-radius: 12px;
+      border-top-right-radius: 12px;
+    }
+
+    .table-header-title h2 {
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: var(--text-main);
+    }
+
+    .table-container {
+      overflow-x: auto;
+      position: relative;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      text-align: left;
+      font-size: 0.9rem;
+    }
+
+    th {
+      background: var(--table-header-bg);
+      color: var(--text-muted);
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      padding: 12px 14px;
+      border-bottom: 1px solid var(--card-border);
+    }
+
+    td {
+      padding: 10px 14px;
+      border-bottom: 1px solid var(--card-border);
+      vertical-align: middle;
+    }
+
+    tr:hover td {
+      background-color: var(--row-hover);
+    }
+
+    tr.section-row td {
+      background: var(--section-header-bg);
+      font-weight: 700;
+      font-size: 0.95rem;
+      color: var(--accent-blue);
+      border-top: 2px solid var(--card-border);
+      border-bottom: 1px solid var(--card-border);
+      padding: 14px;
+    }
+
+    .section-title-wrapper {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .section-badge {
+      font-size: 0.75rem;
+      background: rgba(56, 189, 248, 0.15);
+      color: var(--accent-blue);
+      padding: 2px 8px;
+      border-radius: 4px;
+      font-weight: 500;
+    }
+
+    /* Name input cell wrapper with Info Tooltip */
+    .name-cell-wrapper {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      position: relative;
+    }
+
+    .info-icon {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      background: rgba(56, 189, 248, 0.15);
+      color: var(--accent-blue);
+      font-size: 0.75rem;
+      font-weight: 700;
+      cursor: pointer;
+      flex-shrink: 0;
+      transition: background 0.2s, transform 0.2s;
+      position: relative;
+    }
+
+    .info-icon:hover {
+      background: var(--accent-blue);
+      color: #0f172a;
+      transform: scale(1.1);
+    }
+
+    /* Tooltip Popup Box */
+    .info-icon .tooltip-box {
+      visibility: hidden;
+      opacity: 0;
+      width: 290px;
+      background-color: var(--tooltip-bg);
+      color: var(--text-main);
+      text-align: left;
+      border: 1px solid var(--tooltip-border);
+      border-radius: 8px;
+      padding: 10px 12px;
+      position: absolute;
+      z-index: 100;
+      bottom: 125%;
+      left: 50%;
+      transform: translateX(-50%);
+      box-shadow: 0 10px 20px rgba(0,0,0,0.5);
+      font-size: 0.78rem;
+      line-height: 1.45;
+      font-weight: 400;
+      pointer-events: none;
+      transition: opacity 0.2s ease-in-out, visibility 0.2s ease-in-out;
+    }
+
+    .info-icon .tooltip-box::after {
+      content: "";
+      position: absolute;
+      top: 100%;
+      left: 50%;
+      margin-left: -6px;
+      border-width: 6px;
+      border-style: solid;
+      border-color: var(--tooltip-border) transparent transparent transparent;
+    }
+
+    .info-icon:hover .tooltip-box {
+      visibility: visible;
+      opacity: 1;
+    }
+
+    input.table-input {
+      padding: 6px 8px;
+      font-size: 0.85rem;
+    }
+
+    select.spec-select {
+      padding: 6px 8px;
+      font-size: 0.85rem;
+      width: 100%;
+      min-width: 280px;
+    }
+
+    .num-col {
+      width: 100px;
+    }
+
+    .cost-col {
+      width: 130px;
+      font-family: monospace;
+      font-weight: 600;
+    }
+
+    .total-col {
+      width: 140px;
+      font-family: monospace;
+      font-weight: 700;
+      color: var(--accent-green);
+    }
+
+    .btn-delete {
+      background: transparent;
+      border: none;
+      color: #ef4444;
+      font-size: 1.1rem;
+      cursor: pointer;
+      padding: 4px 8px;
+      border-radius: 4px;
+    }
+
+    .btn-delete:hover {
+      background: rgba(239, 68, 68, 0.15);
+    }
+
+    /* Architecture Callout Note */
+    .arch-callout {
+      background: rgba(56, 189, 248, 0.08);
+      border-left: 4px solid var(--accent-blue);
+      padding: 1rem;
+      margin-bottom: 1.5rem;
+      border-radius: 6px;
+      font-size: 0.88rem;
+      line-height: 1.5;
+    }
+
+    .arch-callout strong {
+      color: var(--accent-blue);
+    }
+
+    /* Summary & Remark Footer */
+    .summary-grid {
+      display: grid;
+      grid-template-columns: 2fr 1fr;
+      gap: 1.5rem;
+      margin-bottom: 2rem;
+    }
+
+    @media (max-width: 900px) {
+      .summary-grid { grid-template-columns: 1fr; }
+    }
+
+    .remark-card, .total-card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      padding: 1.5rem;
+      box-shadow: var(--shadow);
+    }
+
+    .remark-card h3, .total-card h3 {
+      font-size: 0.95rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--text-muted);
+      margin-bottom: 1rem;
+    }
+
+    .remark-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      font-size: 0.85rem;
+      color: var(--text-muted);
+    }
+
+    .remark-list li {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .remark-list li::before {
+      content: "•";
+      color: var(--accent-blue);
+      font-weight: bold;
+    }
+
+    .total-box {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .total-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      padding-bottom: 0.75rem;
+      border-bottom: 1px solid var(--card-border);
+    }
+
+    .total-item label {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      font-weight: 500;
+    }
+
+    .total-item .val-usd {
+      font-size: 1.5rem;
+      font-weight: 800;
+      color: var(--accent-blue);
+      font-family: monospace;
+    }
+
+    .total-item .val-thb {
+      font-size: 1.5rem;
+      font-weight: 800;
+      color: var(--accent-green);
+      font-family: monospace;
+    }
+
+    /* Print styling matching PDF format */
+    @media print {
+      body { background: white; color: black; padding: 0; }
+      .no-print, header, button, .btn-delete, .info-icon { display: none !important; }
+      .container { max-width: 100%; }
+      .table-card, .remark-card, .total-card, .arch-callout {
+        border: 1px solid #ccc;
+        box-shadow: none;
+        background: white;
+        color: black;
+      }
+      th { background: #f1f5f9; color: #1e293b; }
+      tr.section-row td { background: #f8fafc; color: #0284c7; }
+      td { border-bottom: 1px solid #ddd; color: black; }
+      input, select { border: none; background: transparent; color: black; padding: 0; }
+      .val-usd { color: #0284c7 !important; }
+      .val-thb { color: #059669 !important; }
+    }
+  </style>
+</head>
+<body data-theme="dark">
+
+<div class="container">
+
+  <!-- Header & Interactive Control Bar -->
+  <header class="no-print">
+    <div class="header-top">
+      <div class="brand-title">
+        NextClan 2-Year Infra Cost Estimator
+        <span>Interactive Single-Table</span>
+      </div>
+      <div class="btn-group">
+        <button id="themeToggleBtn">☀️ Light Mode</button>
+        <button class="btn-primary" onclick="window.print()">🖨️ Print / Export PDF</button>
+      </div>
+    </div>
+
+    <div class="controls-grid">
+      <div class="control-group" style="grid-column: span 2;">
+        <label for="tableTitleInput">Table Name / Scenario Title</label>
+        <input type="text" id="tableTitleInput" class="title-input" value="Azure Estimated Cost Set N: Only Testnet (Baseline Performance)" oninput="updateTableTitle()" />
+      </div>
+
+      <div class="control-group">
+        <label for="presetSelect">Load Preset Scenario</label>
+        <select id="presetSelect" onchange="loadPresetScenario()">
+          <option value="azure_baseline">Azure Testnet: Baseline Performance</option>
+          <option value="azure_optimized">Azure Testnet: Optimized Cost</option>
+          <option value="azure_dev_zone">Azure Dev Zone (No Explorer)</option>
+          <option value="azure_lowest_budget">Azure Lowest Budget (2 Nodes)</option>
+          <option value="gcp_same_tier">GCP Testnet: Same Tier Equivalent</option>
+          <option value="aws_same_tier">AWS Testnet: Same Tier Equivalent</option>
+          <option value="custom_blank">Custom / Blank Template</option>
+        </select>
+      </div>
+
+      <div class="control-group">
+        <label for="exchangeRateInput">Exchange Rate (USD / THB)</label>
+        <input type="number" step="0.1" id="exchangeRateInput" value="33.30" oninput="calculateAllTotals()" />
+      </div>
+    </div>
+
+    <div class="actions-row">
+      <div class="btn-group">
+        <button class="btn-success" onclick="addRow('Development Zone')">+ Dev Zone Row</button>
+        <button class="btn-success" onclick="addRow('Platform Service (Optional)')">+ Platform Row</button>
+        <button class="btn-success" onclick="addRow('Blockchain Node')">+ Node Row</button>
+        <button class="btn-success" onclick="addRow('Storage & Other')">+ Storage Row</button>
+      </div>
+      <div class="btn-group">
+        <button onclick="loadPresetScenario()">🔄 Reset to Preset</button>
+        <button onclick="exportCSV()">📥 Export CSV</button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Architecture Deployment Explanation Callout -->
+  <div class="arch-callout" id="archCalloutBox">
+    <strong>💡 Deployment Architecture Note:</strong> Standard sets run on Kubernetes (AKS). For <em>Lowest Budget (2 Node)</em>, Kubernetes worker nodes are set to 0 because Besu nodes deploy directly as standalone VMs (Standard_B2s) using Docker/systemd with direct peer-to-peer connections, bypassing AKS cluster overhead to cut 2-year costs from ~$35k down to ~$3.7k USD.
+  </div>
+
+  <!-- Single Master Table Display -->
+  <div class="table-card">
+    <div class="table-header-title">
+      <h2 id="displayTableTitle">Azure Estimated Cost Set N: Only Testnet (Baseline Performance)</h2>
+      <span class="section-badge" id="presetBadge">Azure Preset</span>
+    </div>
+    <div class="table-container">
+      <table id="costTable">
+        <thead>
+          <tr>
+            <th style="width: 25%;">Instance / Item Name</th>
+            <th style="width: 35%;">Specification (With Recommendation Annotations)</th>
+            <th class="cost-col">Monthly (USD)</th>
+            <th class="num-col">Amount</th>
+            <th class="num-col">Months</th>
+            <th class="total-col">Total Cost (USD)</th>
+            <th class="no-print" style="width: 40px; text-align: center;">Action</th>
+          </tr>
+        </thead>
+        <tbody id="tableBody">
+          <!-- Dynamically populated rows -->
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Summary & PDF-Style Remark Cards -->
+  <div class="summary-grid">
+    <div class="remark-card">
+      <h3>Remarks & Configuration Notes</h3>
+      <ul class="remark-list">
+        <li>1-Year reserve receives &gt; 30% discount on Azure / AWS / GCP compute nodes.</li>
+        <li>24*7 Run Time assumption for continuous blockchain validator node execution.</li>
+        <li>Non-committed pricing models for flexible development zones.</li>
+        <li>Exchange Rate Benchmark: <strong id="remarkExchangeRate">THB 33.30 / USD</strong>.</li>
+        <li>Hover over ℹ️ icons to view minimum hardware requirements and node capacity explanations.</li>
+      </ul>
+    </div>
+
+    <div class="total-card">
+      <h3>Cost Summary (2 Years)</h3>
+      <div class="total-box">
+        <div class="total-item">
+          <label>Total 2 Years Cost (USD)</label>
+          <div class="val-usd" id="grandTotalUSD">$0</div>
+        </div>
+        <div class="total-item">
+          <label>Total 2 Years Cost (THB)</label>
+          <div class="val-thb" id="grandTotalTHB">0 Baht</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+  // Instance / Item Description Information Dictionary (Hover Tooltip Content)
+  const INSTANCE_INFO_MAP = {
+    "Control": "Management node for cluster control plane & bootstrap services. In Lowest Budget mode, not used (direct VM bootstrap).",
+    "HA Proxy": "Load balancer for high-availability ingress traffic & peer distribution. In Lowest Budget mode, nodes use direct P2P connections.",
+    "System pool": "Kubernetes system node pool hosting core cluster workloads & ingress. In Lowest Budget mode, no AKS is deployed.",
+    "App pool": "Kubernetes application node pool hosting dApps & backend APIs. In Lowest Budget mode, no AKS is deployed.",
+    "Kubernetes worker": "Kubernetes worker node for hosting blockchain container nodes. 1 instance capable of 1 node (or 2 light nodes). Set to 0 in Lowest Budget mode because nodes run on standalone VMs.",
+    "Kubernetes workers": "Kubernetes worker nodes for hosting blockchain container nodes. 1 instance capable of 1 node (or 2 light nodes).",
+    "Github Action": "Managed CI/CD runner service for automated testing and smart contract deployments.",
+    "PostgreSQL x2, ACR, KV, Monitor, Grafana": "Platform services: HA managed PostgreSQL DB, container registry, Key Vault secrets, & Grafana metrics.",
+    "Cloud SQL PostgreSQL + GCR + Secrets": "GCP Platform services: Cloud SQL PostgreSQL, Container Registry, Secrets, & Cloud Monitoring.",
+    "RDS PostgreSQL + ECR + Secrets": "AWS Platform services: RDS PostgreSQL, Container Registry (ECR), & Secrets Manager.",
+    "App Gateway WAF + LBs + IPs + egress": "Web Application Firewall (WAF), public IPs, regional load balancers, and egress data transfer.",
+    "Cloud Armor + Load Balancer + Egress": "GCP WAF (Cloud Armor), regional HTTP(S) load balancing, static IPs, and data egress.",
+    "AWS WAF + Application Load Balancer": "AWS WAF, Application Load Balancer (ALB), public IPs, and data egress transfer.",
+    "Boot + Validator (Node 1)": "Primary bootstrap & validator node. Standalone VM (Standard_B2s 2vCPU/4GB) with Docker/systemd in Lowest Budget mode.",
+    "Boot+Validator Node": "Primary bootstrap & validator node. Min requirement: 4vCPU / 16GB RAM for initial sync & consensus.",
+    "Validator (Node 2,3)": "Consensus block producer node. Minimum requirement: 2vCPU / 8GB RAM, 100-200GB SSD disk.",
+    "Validator": "Consensus block producer node. Minimum requirement: 2vCPU / 8GB RAM, 100-200GB SSD disk.",
+    "Validator (Node 2)": "Consensus block producer node. Standalone VM (Standard_B2s 2vCPU/4GB) connected via direct P2P in Lowest Budget mode.",
+    "RPC + Validator (Node 4)": "Combined JSON-RPC gateway & validator node handling external web3 transactions.",
+    "Rpc+Validator": "Combined JSON-RPC gateway & validator node handling external web3 transactions.",
+    "RPC + Explorer (Node 5)": "Archive RPC endpoint & Blockscout explorer backend. Min requirement: 4vCPU / 16GB RAM, 256GB+ SSD.",
+    "RPC+Explorer": "Archive RPC endpoint & Blockscout explorer backend. Min requirement: 4vCPU / 16GB RAM, 256GB+ SSD.",
+    "Node 1-4 disks": "Dedicated Premium SSD storage for validator node state and RocksDB storage (P10/128GB).",
+    "Node 1-4 Disk": "Dedicated SSD storage for validator node state and RocksDB storage (P10/128GB).",
+    "Node data disks": "Dedicated Standard/Premium SSD storage attached as direct block device to standalone VMs (E10 LRS 128GB).",
+    "Node 5 explorer disk": "High-capacity SSD storage for Blockscout indexing database and historical chain state (P15/256GB).",
+    "Node Explorer Disk": "High-capacity SSD storage for Blockscout indexing database and historical chain state (256GB).",
+    "Azure Monitor Basic Logs": "Cloud monitoring log ingestion allowance for system diagnostics.",
+    "Bandwidth egress allowance": "Estimated outbound data transfer allowance for RPC and web services."
+  };
+
+  // Specifications Dictionary with Multi-Cloud Mapping & Recommendations
+  const SPEC_DICTIONARY = [
+    // Compute - 2vCPU / 8GB Tier (Standard Validator)
+    { label: "Azure D2s_v5 · 2vCPU · 8GB ($70.00/mo) - (Best for lowest cost validator)", cost: 70 },
+    { label: "Azure D2s_v5 · 2vCPU · 8GB - Baseline ($87.00/mo) - (Standard testnet validator)", cost: 87 },
+    { label: "Azure D2s_v5 · 2vCPU · 8GB - High ($91.00/mo) - (On-demand non-reserved rate)", cost: 91 },
+    { label: "GCP e2-standard-2 · 2vCPU · 8GB ($67.00/mo) - (Best for lowest cost GCP validator)", cost: 67 },
+    { label: "GCP n2-standard-2 · 2vCPU · 8GB ($82.00/mo) - (Recommended for steady GCP load)", cost: 82 },
+    { label: "AWS t3.large · 2vCPU · 8GB ($60.00/mo) - (Best for balanced AWS validator)", cost: 60 },
+    { label: "AWS t4g.large (ARM) · 2vCPU · 8GB ($48.00/mo) - (Best for ARM cost optimization)", cost: 48 },
+    { label: "AWS m5.large · 2vCPU · 8GB ($70.00/mo) - (Dedicated x86 AWS validator)", cost: 70 },
+
+    // Compute - 4vCPU / 16GB Tier (Heavy Validator / RPC)
+    { label: "Azure D4s_v5 · 4vCPU · 16GB ($140.00/mo) - (Best for high performance / RPC)", cost: 140 },
+    { label: "Azure D4s_v5 · 4vCPU · 16GB - Baseline ($161.00/mo) - (Recommended for Boot & Explorer)", cost: 161 },
+    { label: "Azure D4s_v5 · 4vCPU · 16GB - Max ($175.00/mo) - (Maximum burst capacity)", cost: 175 },
+    { label: "GCP e2-standard-4 · 4vCPU · 16GB ($134.00/mo) - (Best for high performance GCP node)", cost: 134 },
+    { label: "GCP n2-standard-4 · 4vCPU · 16GB ($164.00/mo) - (High performance dedicated GCP)", cost: 164 },
+    { label: "AWS t3.xlarge · 4vCPU · 16GB ($120.00/mo) - (Best for AWS RPC / Explorer)", cost: 120 },
+    { label: "AWS t4g.xlarge (ARM) · 4vCPU · 16GB ($96.00/mo) - (High performance ARM node)", cost: 96 },
+    { label: "AWS m5.xlarge · 4vCPU · 16GB ($140.00/mo) - (Best for high performance AWS)", cost: 140 },
+
+    // Compute - Low Budget / Entry Tier (2vCPU / 4GB)
+    { label: "Azure Standard_B2s · 2vCPU · 4GB ($38.544/mo) - (Ultra budget / 2-node standalone VM)", cost: 38.544 },
+    { label: "GCP e2-medium · 2vCPU · 4GB ($33.00/mo) - (Budget GCP standalone VM node)", cost: 33 },
+    { label: "AWS t3.medium · 2vCPU · 4GB ($30.00/mo) - (Budget AWS standalone VM node)", cost: 30 },
+
+    // Compute - Control & Free/External Tier
+    { label: "Azure e2 · 2vCPU · 8GB ($0.00/mo - Direct/Control) - (Control plane & HA proxy)", cost: 0 },
+    { label: "GCP e2-micro / Direct Bootstrap ($0.00/mo) - (Free direct VM bootstrap)", cost: 0 },
+    { label: "External / Managed / Github Action ($0.00/mo) - (Managed runner service)", cost: 0 },
+    { label: "Not used - no AKS ($0.00/mo) - (Standalone VM deployment mode)", cost: 0 },
+    { label: "Not used - direct VM bootstrap ($0.00/mo) - (Direct node connection)", cost: 0 },
+    { label: "Not used - direct peer connections ($0.00/mo) - (Direct P2P enode connection)", cost: 0 },
+
+    // Platform & Managed Services
+    { label: "Azure PostgreSQL x2, ACR, KV, Monitor, Grafana ($140.00/mo) - (Recommended Azure platform)", cost: 140 },
+    { label: "GCP Cloud SQL (2vCPU/8GB) + GCR + Secrets ($135.00/mo) - (Recommended GCP platform)", cost: 135 },
+    { label: "AWS RDS PostgreSQL (db.m5.large) + ECR + Secrets ($138.00/mo) - (Recommended AWS platform)", cost: 138 },
+    { label: "Azure App Gateway WAF + LBs + IPs + egress ($90.00/mo) - (Azure WAF & ingress)", cost: 90 },
+    { label: "GCP Cloud Armor + Load Balancer + Egress ($85.00/mo) - (GCP Cloud Armor & LB)", cost: 85 },
+    { label: "AWS WAF + Application Load Balancer + Egress ($88.00/mo) - (AWS WAF & ALB)", cost: 88 },
+    { label: "Azure Monitor Basic Logs ($0.65/mo) - (Log ingestion allowance)", cost: 0.65 },
+    { label: "AWS CloudWatch Logs ($0.50/mo) - (Log ingestion allowance)", cost: 0.50 },
+    { label: "Bandwidth Egress Allowance ($0.11/mo) - (Data egress allowance)", cost: 0.11 },
+
+    // Storage Options
+    { label: "Azure P10 · 128GB Premium SSD x4 ($64.00/mo) - (Standard validator disk set)", cost: 64 },
+    { label: "Azure P10 · 128GB Premium SSD x4 - Baseline ($79.00/mo) - (Baseline validator storage)", cost: 79 },
+    { label: "Azure P15 · 256GB Premium SSD ($21.00/mo) - (Recommended for Explorer DB)", cost: 21 },
+    { label: "Azure P15 · 256GB Premium SSD - Baseline ($38.00/mo) - (High IOPS Explorer disk)", cost: 38 },
+    { label: "Azure E10 Standard SSD 128GB ($9.60/mo) - (Budget 128GB SSD for standalone VM)", cost: 9.60 },
+    { label: "GCP pd-balanced 128GB ($13.00/mo) - (Best budget GCP SSD)", cost: 13 },
+    { label: "GCP pd-ssd 128GB ($22.00/mo) - (Standard GCP SSD)", cost: 22 },
+    { label: "GCP pd-ssd 256GB ($43.00/mo) - (Recommended for GCP Explorer)", cost: 43 },
+    { label: "AWS gp3 SSD 128GB (3000 IOPS) ($10.24/mo) - (Best budget AWS SSD)", cost: 10.24 },
+    { label: "AWS gp3 SSD 256GB ($20.48/mo) - (Recommended for AWS Explorer)", cost: 20.48 },
+    { label: "AWS gp3 SSD 500GB ($40.00/mo) - (High capacity AWS disk)", cost: 40 },
+    { label: "Generic 50GB SSD ($16.00/mo) - (Light dev storage)", cost: 16 },
+    { label: "Generic 128GB SSD ($21.00/mo) - (Standard 128GB SSD)", cost: 21 },
+    { label: "Custom Specification...", cost: 0 }
+  ];
+
+  // Preset Scenarios Data
+  const PRESET_SCENARIOS = {
+    azure_baseline: {
+      title: "Azure Estimated Cost Set N: Only Testnet (Baseline Performance)",
+      badge: "Azure Baseline",
+      sections: [
+        {
+          name: "Development Zone",
+          rows: [
+            { name: "Control", spec: "Azure e2 · 2vCPU · 8GB ($0.00/mo - Direct/Control) - (Control plane & HA proxy)", cost: 0, amount: 1, months: 24 },
+            { name: "HA Proxy", spec: "Azure e2 · 2vCPU · 8GB ($0.00/mo - Direct/Control) - (Control plane & HA proxy)", cost: 0, amount: 1, months: 24 },
+            { name: "System pool", spec: "Azure D2s_v5 · 2vCPU · 8GB - Baseline ($87.00/mo) - (Standard testnet validator)", cost: 87, amount: 1, months: 24 },
+            { name: "App pool", spec: "Azure D4s_v5 · 4vCPU · 16GB ($140.00/mo) - (Best for high performance / RPC)", cost: 140, amount: 1, months: 24 },
+            { name: "Kubernetes workers", spec: "Azure D2s_v5 · 2vCPU · 8GB - Baseline ($87.00/mo) - (Standard testnet validator)", cost: 87, amount: 5, months: 24 },
+            { name: "Github Action", spec: "External / Managed / Github Action ($0.00/mo) - (Managed runner service)", cost: 0, amount: 1, months: 24 }
+          ]
+        },
+        {
+          name: "Platform Service (Optional)",
+          rows: [
+            { name: "PostgreSQL x2, ACR, KV, Monitor, Grafana", spec: "Azure PostgreSQL x2, ACR, KV, Monitor, Grafana ($140.00/mo) - (Recommended Azure platform)", cost: 140, amount: 1, months: 24 },
+            { name: "App Gateway WAF + LBs + IPs + egress", spec: "Azure App Gateway WAF + LBs + IPs + egress ($90.00/mo) - (Azure WAF & ingress)", cost: 90, amount: 1, months: 24 }
+          ]
+        },
+        {
+          name: "Blockchain Node",
+          rows: [
+            { name: "Boot + Validator (Node 1)", spec: "Azure D4s_v5 · 4vCPU · 16GB - Baseline ($161.00/mo) - (Recommended for Boot & Explorer)", cost: 161, amount: 1, months: 24 },
+            { name: "Validator (Node 2,3)", spec: "Azure D2s_v5 · 2vCPU · 8GB - High ($91.00/mo) - (On-demand non-reserved rate)", cost: 91, amount: 2, months: 24 },
+            { name: "RPC + Validator (Node 4)", spec: "Azure D4s_v5 · 4vCPU · 16GB - Max ($175.00/mo) - (Maximum burst capacity)", cost: 175, amount: 1, months: 24 },
+            { name: "RPC + Explorer (Node 5)", spec: "Azure D4s_v5 · 4vCPU · 16GB - Max ($175.00/mo) - (Maximum burst capacity)", cost: 175, amount: 1, months: 24 }
+          ]
+        },
+        {
+          name: "Storage & Other",
+          rows: [
+            { name: "Node 1-4 disks", spec: "Azure P10 · 128GB Premium SSD x4 ($64.00/mo) - (Standard validator disk set)", cost: 64, amount: 1, months: 24 },
+            { name: "Node 5 explorer disk", spec: "Azure P15 · 256GB Premium SSD ($21.00/mo) - (Recommended for Explorer DB)", cost: 21, amount: 1, months: 24 }
+          ]
+        }
+      ]
+    },
+
+    azure_optimized: {
+      title: "Azure Estimated Cost Set N: Only Testnet (Optimized)",
+      badge: "Azure Optimized",
+      sections: [
+        {
+          name: "Development Zone",
+          rows: [
+            { name: "Control", spec: "Azure e2 · 2vCPU · 8GB ($0.00/mo - Direct/Control) - (Control plane & HA proxy)", cost: 0, amount: 1, months: 24 },
+            { name: "HA Proxy", spec: "Azure e2 · 2vCPU · 8GB ($0.00/mo - Direct/Control) - (Control plane & HA proxy)", cost: 0, amount: 1, months: 24 },
+            { name: "System pool", spec: "Azure D2s_v5 · 2vCPU · 8GB - Baseline ($87.00/mo) - (Standard testnet validator)", cost: 87, amount: 1, months: 24 },
+            { name: "App pool", spec: "Azure D4s_v5 · 4vCPU · 16GB ($140.00/mo) - (Best for high performance / RPC)", cost: 140, amount: 1, months: 24 },
+            { name: "Kubernetes worker", spec: "Azure D2s_v5 · 2vCPU · 8GB - Baseline ($87.00/mo) - (Standard testnet validator)", cost: 87, amount: 2, months: 24 },
+            { name: "Github Action", spec: "External / Managed / Github Action ($0.00/mo) - (Managed runner service)", cost: 0, amount: 1, months: 24 }
+          ]
+        },
+        {
+          name: "Platform Service (Optional)",
+          rows: [
+            { name: "PostgreSQL x2, ACR, KV, Monitor, Grafana", spec: "Azure PostgreSQL x2, ACR, KV, Monitor, Grafana ($140.00/mo) - (Recommended Azure platform)", cost: 140, amount: 1, months: 24 },
+            { name: "App Gateway WAF + LBs + IPs + egress", spec: "Azure App Gateway WAF + LBs + IPs + egress ($90.00/mo) - (Azure WAF & ingress)", cost: 90, amount: 1, months: 24 }
+          ]
+        },
+        {
+          name: "Blockchain Node",
+          rows: [
+            { name: "Boot+Validator Node", spec: "Azure D2s_v5 · 2vCPU · 8GB - High ($91.00/mo) - (On-demand non-reserved rate)", cost: 91, amount: 1, months: 24 },
+            { name: "Validator", spec: "Azure D2s_v5 · 2vCPU · 8GB - High ($91.00/mo) - (On-demand non-reserved rate)", cost: 91, amount: 2, months: 24 },
+            { name: "Rpc+Validator", spec: "Azure D2s_v5 · 2vCPU · 8GB - High ($91.00/mo) - (On-demand non-reserved rate)", cost: 91, amount: 1, months: 24 },
+            { name: "RPC+Explorer", spec: "Azure D2s_v5 · 2vCPU · 8GB - High ($91.00/mo) - (On-demand non-reserved rate)", cost: 91, amount: 1, months: 24 }
+          ]
+        },
+        {
+          name: "Storage & Other",
+          rows: [
+            { name: "Node 1-4 Disk", spec: "Generic 50GB SSD ($16.00/mo) - (Light dev storage)", cost: 16, amount: 1, months: 24 },
+            { name: "Node Explorer Disk", spec: "Azure P15 · 256GB Premium SSD ($21.00/mo) - (Recommended for Explorer DB)", cost: 21, amount: 1, months: 24 }
+          ]
+        }
+      ]
+    },
+
+    azure_dev_zone: {
+      title: "Azure Estimated Cost Set N: Dev Zone *No explorer node",
+      badge: "Azure Dev Zone",
+      sections: [
+        {
+          name: "Development Zone",
+          rows: [
+            { name: "Control", spec: "Azure e2 · 2vCPU · 8GB ($0.00/mo - Direct/Control) - (Control plane & HA proxy)", cost: 0, amount: 1, months: 24 },
+            { name: "HA Proxy", spec: "Azure e2 · 2vCPU · 8GB ($0.00/mo - Direct/Control) - (Control plane & HA proxy)", cost: 0, amount: 1, months: 24 },
+            { name: "System pool", spec: "Azure D2s_v5 · 2vCPU · 8GB ($70.00/mo) - (Best for lowest cost validator)", cost: 70, amount: 1, months: 24 },
+            { name: "App pool", spec: "Azure D4s_v5 · 4vCPU · 16GB ($140.00/mo) - (Best for high performance / RPC)", cost: 140, amount: 1, months: 24 },
+            { name: "Kubernetes worker", spec: "Azure D2s_v5 · 2vCPU · 8GB ($70.00/mo) - (Best for lowest cost validator)", cost: 70, amount: 2, months: 24 },
+            { name: "Github Action", spec: "External / Managed / Github Action ($0.00/mo) - (Managed runner service)", cost: 0, amount: 1, months: 24 }
+          ]
+        },
+        {
+          name: "Platform Service (Optional)",
+          rows: [
+            { name: "PostgreSQL x2, ACR, KV, Monitor, Grafana", spec: "Azure PostgreSQL x2, ACR, KV, Monitor, Grafana ($140.00/mo) - (Recommended Azure platform)", cost: 140, amount: 0, months: 24 },
+            { name: "App Gateway WAF + LBs + IPs + egress", spec: "Azure App Gateway WAF + LBs + IPs + egress ($90.00/mo) - (Azure WAF & ingress)", cost: 90, amount: 1, months: 24 }
+          ]
+        },
+        {
+          name: "Blockchain Node",
+          rows: [
+            { name: "Boot+Validator Node", spec: "Azure D4s_v5 · 4vCPU · 16GB ($140.00/mo) - (Best for high performance / RPC)", cost: 140, amount: 1, months: 24 },
+            { name: "Validator", spec: "Azure D2s_v5 · 2vCPU · 8GB ($70.00/mo) - (Best for lowest cost validator)", cost: 70, amount: 0, months: 24 },
+            { name: "Rpc+Validator", spec: "Azure D4s_v5 · 4vCPU · 16GB ($140.00/mo) - (Best for high performance / RPC)", cost: 140, amount: 1, months: 24 },
+            { name: "RPC+Explorer", spec: "Azure D4s_v5 · 4vCPU · 16GB ($140.00/mo) - (Best for high performance / RPC)", cost: 140, amount: 0, months: 24 }
+          ]
+        },
+        {
+          name: "Storage & Other",
+          rows: [
+            { name: "Node 1-4 Disk", spec: "Generic 50GB SSD ($16.00/mo) - (Light dev storage)", cost: 16, amount: 2, months: 24 },
+            { name: "Node Explorer Disk", spec: "Azure P15 · 256GB Premium SSD ($21.00/mo) - (Recommended for Explorer DB)", cost: 21, amount: 0, months: 24 }
+          ]
+        }
+      ]
+    },
+
+    azure_lowest_budget: {
+      title: "Azure Estimated Cost Set N: Lowest budget(2 node)",
+      badge: "Azure Lowest Budget",
+      sections: [
+        {
+          name: "Development Zone",
+          rows: [
+            { name: "Control", spec: "Not used - direct VM bootstrap ($0.00/mo) - (Direct node connection)", cost: 0, amount: 1, months: 24 },
+            { name: "HA Proxy", spec: "Not used - direct peer connections ($0.00/mo) - (Direct P2P enode connection)", cost: 0, amount: 1, months: 24 },
+            { name: "System pool", spec: "Not used - no AKS ($0.00/mo) - (Standalone VM deployment mode)", cost: 0, amount: 1, months: 24 },
+            { name: "App pool", spec: "Not used - no AKS ($0.00/mo) - (Standalone VM deployment mode)", cost: 0, amount: 1, months: 24 },
+            { name: "Kubernetes worker", spec: "Not used - no AKS ($0.00/mo) - (Standalone VM deployment mode)", cost: 0, amount: 2, months: 24 }
+          ]
+        },
+        {
+          name: "Platform Service (Optional)",
+          rows: [
+            { name: "Azure Monitor Basic Logs", spec: "Azure Monitor Basic Logs ($0.65/mo) - (Log ingestion allowance)", cost: 0.65, amount: 10, months: 24 },
+            { name: "Bandwidth egress allowance", spec: "Bandwidth Egress Allowance ($0.11/mo) - (Data egress allowance)", cost: 0.11, amount: 100, months: 24 }
+          ]
+        },
+        {
+          name: "Blockchain Node",
+          rows: [
+            { name: "Boot + Validator (Node 1)", spec: "Azure Standard_B2s · 2vCPU · 4GB ($38.544/mo) - (Ultra budget / 2-node standalone VM)", cost: 38.544, amount: 1, months: 24 },
+            { name: "Validator (Node 2)", spec: "Azure Standard_B2s · 2vCPU · 4GB ($38.544/mo) - (Ultra budget / 2-node standalone VM)", cost: 38.544, amount: 1, months: 24 }
+          ]
+        },
+        {
+          name: "Storage & Other",
+          rows: [
+            { name: "Node data disks", spec: "Azure E10 Standard SSD 128GB ($9.60/mo) - (Budget 128GB SSD for standalone VM)", cost: 9.60, amount: 2, months: 24 },
+            { name: "Node Explorer Disk", spec: "Azure P15 · 256GB Premium SSD ($21.00/mo) - (Recommended for Explorer DB)", cost: 21, amount: 0, months: 24 }
+          ]
+        }
+      ]
+    },
+
+    gcp_same_tier: {
+      title: "GCP Estimated Cost Set: Testnet & Dev Zone (Same Tier)",
+      badge: "GCP Equivalent",
+      sections: [
+        {
+          name: "Development Zone",
+          rows: [
+            { name: "Control", spec: "GCP e2-micro / Direct Bootstrap ($0.00/mo) - (Free direct VM bootstrap)", cost: 0, amount: 1, months: 24 },
+            { name: "HA Proxy", spec: "GCP e2-micro / Direct Bootstrap ($0.00/mo) - (Free direct VM bootstrap)", cost: 0, amount: 1, months: 24 },
+            { name: "System pool", spec: "GCP e2-standard-2 · 2vCPU · 8GB ($67.00/mo) - (Best for lowest cost GCP validator)", cost: 67, amount: 1, months: 24 },
+            { name: "App pool", spec: "GCP e2-standard-4 · 4vCPU · 16GB ($134.00/mo) - (Best for high performance GCP node)", cost: 134, amount: 1, months: 24 },
+            { name: "Kubernetes workers", spec: "GCP e2-standard-2 · 2vCPU · 8GB ($67.00/mo) - (Best for lowest cost GCP validator)", cost: 67, amount: 5, months: 24 }
+          ]
+        },
+        {
+          name: "Platform Service (Optional)",
+          rows: [
+            { name: "Cloud SQL PostgreSQL + GCR + Secrets", spec: "GCP Cloud SQL (2vCPU/8GB) + GCR + Secrets ($135.00/mo) - (Recommended GCP platform)", cost: 135, amount: 1, months: 24 },
+            { name: "Cloud Armor + Load Balancer + Egress", spec: "GCP Cloud Armor + Load Balancer + Egress ($85.00/mo) - (GCP Cloud Armor & LB)", cost: 85, amount: 1, months: 24 }
+          ]
+        },
+        {
+          name: "Blockchain Node",
+          rows: [
+            { name: "Boot + Validator (Node 1)", spec: "GCP e2-standard-4 · 4vCPU · 16GB ($134.00/mo) - (Best for high performance GCP node)", cost: 134, amount: 1, months: 24 },
+            { name: "Validator (Node 2,3)", spec: "GCP e2-standard-2 · 2vCPU · 8GB ($67.00/mo) - (Best for lowest cost GCP validator)", cost: 67, amount: 2, months: 24 },
+            { name: "RPC + Validator (Node 4)", spec: "GCP e2-standard-4 · 4vCPU · 16GB ($134.00/mo) - (Best for high performance GCP node)", cost: 134, amount: 1, months: 24 },
+            { name: "RPC + Explorer (Node 5)", spec: "GCP e2-standard-4 · 4vCPU · 16GB ($134.00/mo) - (Best for high performance GCP node)", cost: 134, amount: 1, months: 24 }
+          ]
+        },
+        {
+          name: "Storage & Other",
+          rows: [
+            { name: "Node 1-4 disks", spec: "GCP pd-balanced 128GB ($13.00/mo) - (Best budget GCP SSD)", cost: 13, amount: 4, months: 24 },
+            { name: "Node 5 explorer disk", spec: "GCP pd-ssd 256GB ($43.00/mo) - (Recommended for GCP Explorer)", cost: 43, amount: 1, months: 24 }
+          ]
+        }
+      ]
+    },
+
+    aws_same_tier: {
+      title: "AWS Estimated Cost Set: Testnet & Dev Zone (Same Tier)",
+      badge: "AWS Equivalent",
+      sections: [
+        {
+          name: "Development Zone",
+          rows: [
+            { name: "Control", spec: "External / Managed / Github Action ($0.00/mo) - (Managed runner service)", cost: 0, amount: 1, months: 24 },
+            { name: "HA Proxy", spec: "External / Managed / Github Action ($0.00/mo) - (Managed runner service)", cost: 0, amount: 1, months: 24 },
+            { name: "System pool", spec: "AWS t3.large · 2vCPU · 8GB ($60.00/mo) - (Best for balanced AWS validator)", cost: 60, amount: 1, months: 24 },
+            { name: "App pool", spec: "AWS t3.xlarge · 4vCPU · 16GB ($120.00/mo) - (Best for AWS RPC / Explorer)", cost: 120, amount: 1, months: 24 },
+            { name: "Kubernetes workers", spec: "AWS t3.large · 2vCPU · 8GB ($60.00/mo) - (Best for balanced AWS validator)", cost: 60, amount: 5, months: 24 }
+          ]
+        },
+        {
+          name: "Platform Service (Optional)",
+          rows: [
+            { name: "RDS PostgreSQL + ECR + Secrets", spec: "AWS RDS PostgreSQL (db.m5.large) + ECR + Secrets ($138.00/mo) - (Recommended AWS platform)", cost: 138, amount: 1, months: 24 },
+            { name: "AWS WAF + Application Load Balancer", spec: "AWS WAF + Application Load Balancer + Egress ($88.00/mo) - (AWS WAF & ALB)", cost: 88, amount: 1, months: 24 }
+          ]
+        },
+        {
+          name: "Blockchain Node",
+          rows: [
+            { name: "Boot + Validator (Node 1)", spec: "AWS m5.xlarge · 4vCPU · 16GB ($140.00/mo) - (Best for high performance AWS)", cost: 140, amount: 1, months: 24 },
+            { name: "Validator (Node 2,3)", spec: "AWS t3.large · 2vCPU · 8GB ($60.00/mo) - (Best for balanced AWS validator)", cost: 60, amount: 2, months: 24 },
+            { name: "RPC + Validator (Node 4)", spec: "AWS m5.xlarge · 4vCPU · 16GB ($140.00/mo) - (Best for high performance AWS)", cost: 140, amount: 1, months: 24 },
+            { name: "RPC + Explorer (Node 5)", spec: "AWS m5.xlarge · 4vCPU · 16GB ($140.00/mo) - (Best for high performance AWS)", cost: 140, amount: 1, months: 24 }
+          ]
+        },
+        {
+          name: "Storage & Other",
+          rows: [
+            { name: "Node 1-4 disks", spec: "AWS gp3 SSD 128GB (3000 IOPS) ($10.24/mo) - (Best budget AWS SSD)", cost: 10.24, amount: 4, months: 24 },
+            { name: "Node 5 explorer disk", spec: "AWS gp3 SSD 256GB ($20.48/mo) - (Recommended for AWS Explorer)", cost: 20.48, amount: 1, months: 24 }
+          ]
+        }
+      ]
+    },
+
+    custom_blank: {
+      title: "Custom Infrastructure Cost Estimation",
+      badge: "Custom Set",
+      sections: [
+        { name: "Development Zone", rows: [{ name: "Custom Compute Item", spec: "Azure D2s_v5 · 2vCPU · 8GB ($70.00/mo) - (Best for lowest cost validator)", cost: 70, amount: 1, months: 24 }] },
+        { name: "Platform Service (Optional)", rows: [] },
+        { name: "Blockchain Node", rows: [{ name: "Validator Node", spec: "Azure D4s_v5 · 4vCPU · 16GB ($140.00/mo) - (Best for high performance / RPC)", cost: 140, amount: 1, months: 24 }] },
+        { name: "Storage & Other", rows: [{ name: "Node Storage Disk", spec: "Azure P10 · 128GB Premium SSD x4 ($64.00/mo) - (Standard validator disk set)", cost: 64, amount: 1, months: 24 }] }
+      ]
+    }
+  };
+
+  // State
+  let currentTableData = [];
+
+  // Theme Toggle
+  document.getElementById('themeToggleBtn').addEventListener('click', () => {
+    const currentTheme = document.body.getAttribute('data-theme');
+    const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+    document.body.setAttribute('data-theme', newTheme);
+    document.getElementById('themeToggleBtn').innerText = newTheme === 'dark' ? '☀️ Light Mode' : '🌙 Dark Mode';
+  });
+
+  // Update Table Title
+  function updateTableTitle() {
+    const titleVal = document.getElementById('tableTitleInput').value;
+    document.getElementById('displayTableTitle').innerText = titleVal || "NextClan Infra Cost Estimation";
+  }
+
+  // Load Preset Scenario into Single Master Table
+  function loadPresetScenario() {
+    const presetKey = document.getElementById('presetSelect').value;
+    const preset = PRESET_SCENARIOS[presetKey] || PRESET_SCENARIOS.azure_baseline;
+
+    document.getElementById('tableTitleInput').value = preset.title;
+    document.getElementById('presetBadge').innerText = preset.badge;
+    updateTableTitle();
+
+    // Show/hide deployment callout
+    const callout = document.getElementById('archCalloutBox');
+    if (presetKey === 'azure_lowest_budget') {
+      callout.style.borderLeftColor = 'var(--accent-orange)';
+      callout.innerHTML = `<strong>⚡ Lowest Budget (2 Node) Deployment Mode:</strong> Kubernetes (AKS) workers and control pools are set to 0 ($0 cost) because Besu nodes deploy directly onto standalone Azure VMs (Standard_B2s - 2vCPU / 4GB RAM) using Docker/systemd with direct P2P enode connections. 4GB RAM is viable for private/consortium QBFT networks with light transaction load. Managed SSDs (E10 LRS 128GB) attach directly as block devices to each VM. This avoids AKS cluster management overhead ($500-$1,500/mo), lowering 2-year cost to <strong>$2,731 USD (~90,942 THB)</strong>.`;
+    } else {
+      callout.style.borderLeftColor = 'var(--accent-blue)';
+      callout.innerHTML = `<strong>💡 Deployment Architecture Note:</strong> Standard sets run on Kubernetes (AKS). For <em>Lowest Budget (2 Node)</em>, Kubernetes worker nodes are set to 0 because Besu nodes deploy directly as standalone VMs (Standard_B2s) using Docker/systemd with direct peer-to-peer connections, bypassing AKS cluster overhead to cut 2-year costs from ~$35k down to ~$3.7k USD.`;
+    }
+
+    // Deep copy section data
+    currentTableData = JSON.parse(JSON.stringify(preset.sections));
+    renderMasterTable();
+  }
+
+  // Get Description Information for Instance Name Tooltip
+  function getInstanceTooltip(name) {
+    if (INSTANCE_INFO_MAP[name]) return INSTANCE_INFO_MAP[name];
+    
+    // Fallback search
+    const cleanName = name.trim();
+    for (const key in INSTANCE_INFO_MAP) {
+      if (cleanName.toLowerCase().includes(key.toLowerCase())) {
+        return INSTANCE_INFO_MAP[key];
+      }
+    }
+    return "Infrastructure component for NextClan blockchain platform.";
+  }
+
+  // Render Single Master Table
+  function renderMasterTable() {
+    const tbody = document.getElementById('tableBody');
+    tbody.innerHTML = '';
+
+    currentTableData.forEach((section, secIdx) => {
+      // Render Section Header Row
+      const secTr = document.createElement('tr');
+      secTr.className = 'section-row';
+      secTr.innerHTML = `
+        <td colspan="7">
+          <div class="section-title-wrapper">
+            <span>📁 ${section.name}</span>
+            <span class="section-badge" id="sec-subtotal-${secIdx}">Subtotal: $0</span>
+          </div>
+        </td>
+      `;
+      tbody.appendChild(secTr);
+
+      // Render Item Rows
+      section.rows.forEach((row, rowIdx) => {
+        const tr = document.createElement('tr');
+
+        // Specification Dropdown options
+        let specOptionsHTML = '';
+        let foundMatch = false;
+
+        SPEC_DICTIONARY.forEach(item => {
+          const selected = item.label === row.spec ? 'selected' : '';
+          if (selected) foundMatch = true;
+          specOptionsHTML += `<option value="${item.label}" data-cost="${item.cost}" ${selected}>${item.label}</option>`;
+        });
+
+        if (!foundMatch && row.spec) {
+          specOptionsHTML += `<option value="${row.spec}" data-cost="${row.cost}" selected>${row.spec}</option>`;
+        }
+
+        const infoTooltipText = getInstanceTooltip(row.name);
+
+        tr.innerHTML = `
+          <td>
+            <div class="name-cell-wrapper">
+              <input type="text" class="table-input" value="${escapeHtml(row.name)}" oninput="onCellChange(${secIdx}, ${rowIdx}, 'name', this.value)" />
+              <div class="info-icon" title="Click or hover for details">
+                ℹ️
+                <div class="tooltip-box">
+                  <strong>${escapeHtml(row.name)}</strong><br/>
+                  ${escapeHtml(infoTooltipText)}
+                </div>
+              </div>
+            </div>
+          </td>
+          <td>
+            <select class="spec-select" onchange="onSpecSelectChange(${secIdx}, ${rowIdx}, this)">
+              ${specOptionsHTML}
+            </select>
+          </td>
+          <td class="cost-col">
+            <input type="number" step="0.01" class="table-input" value="${row.cost}" oninput="onCellChange(${secIdx}, ${rowIdx}, 'cost', parseFloat(this.value) || 0)" />
+          </td>
+          <td class="num-col">
+            <input type="number" min="0" class="table-input" value="${row.amount}" oninput="onCellChange(${secIdx}, ${rowIdx}, 'amount', parseInt(this.value) || 0)" />
+          </td>
+          <td class="num-col">
+            <input type="number" min="1" class="table-input" value="${row.months}" oninput="onCellChange(${secIdx}, ${rowIdx}, 'months', parseInt(this.value) || 1)" />
+          </td>
+          <td class="total-col" id="row-total-${secIdx}-${rowIdx}">
+            $${formatNum(row.cost * row.amount * row.months)}
+          </td>
+          <td class="no-print" style="text-align: center;">
+            <button class="btn-delete" onclick="deleteRow(${secIdx}, ${rowIdx})" title="Delete Row">✕</button>
+          </td>
+        `;
+
+        tbody.appendChild(tr);
+      });
+    });
+
+    calculateAllTotals();
+  }
+
+  // Handle Spec Dropdown Selection
+  function onSpecSelectChange(secIdx, rowIdx, selectElem) {
+    const selectedOption = selectElem.options[selectElem.selectedIndex];
+    const newSpec = selectedOption.value;
+    const mappedCost = parseFloat(selectedOption.getAttribute('data-cost')) || 0;
+
+    currentTableData[secIdx].rows[rowIdx].spec = newSpec;
+    currentTableData[secIdx].rows[rowIdx].cost = mappedCost;
+
+    renderMasterTable();
+  }
+
+  // Handle Cell Value Edits
+  function onCellChange(secIdx, rowIdx, field, value) {
+    currentTableData[secIdx].rows[rowIdx][field] = value;
+
+    // Update row total cell without full re-render for smooth typing
+    const row = currentTableData[secIdx].rows[rowIdx];
+    const totalCell = document.getElementById(`row-total-${secIdx}-${rowIdx}`);
+    if (totalCell) {
+      totalCell.innerText = `$${formatNum(row.cost * row.amount * row.months)}`;
+    }
+
+    calculateAllTotals();
+  }
+
+  // Add New Row to Section
+  function addRow(sectionName) {
+    let secIdx = currentTableData.findIndex(s => s.name === sectionName);
+    if (secIdx === -1) {
+      currentTableData.push({ name: sectionName, rows: [] });
+      secIdx = currentTableData.length - 1;
+    }
+
+    const defaultSpec = SPEC_DICTIONARY[0];
+    currentTableData[secIdx].rows.push({
+      name: "New Item",
+      spec: defaultSpec.label,
+      cost: defaultSpec.cost,
+      amount: 1,
+      months: 24
+    });
+
+    renderMasterTable();
+  }
+
+  // Delete Row
+  function deleteRow(secIdx, rowIdx) {
+    currentTableData[secIdx].rows.splice(rowIdx, 1);
+    renderMasterTable();
+  }
+
+  // Calculate Section Subtotals and Grand Totals (USD & THB)
+  function calculateAllTotals() {
+    const rate = parseFloat(document.getElementById('exchangeRateInput').value) || 33.30;
+    document.getElementById('remarkExchangeRate').innerText = `THB ${rate.toFixed(2)} / USD`;
+
+    let grandTotalUSD = 0;
+
+    currentTableData.forEach((section, secIdx) => {
+      let sectionSubtotalUSD = 0;
+      section.rows.forEach(row => {
+        const rowTotal = (row.cost || 0) * (row.amount || 0) * (row.months || 0);
+        sectionSubtotalUSD += rowTotal;
+      });
+
+      const badgeElem = document.getElementById(`sec-subtotal-${secIdx}`);
+      if (badgeElem) {
+        badgeElem.innerText = `Subtotal: $${formatNum(sectionSubtotalUSD)}`;
+      }
+
+      grandTotalUSD += sectionSubtotalUSD;
+    });
+
+    const grandTotalTHB = grandTotalUSD * rate;
+
+    document.getElementById('grandTotalUSD').innerText = `$${formatNum(grandTotalUSD)}`;
+    document.getElementById('grandTotalTHB').innerText = `${formatNum(grandTotalTHB)} Baht`;
+  }
+
+  // Format Number with Commas
+  function formatNum(num) {
+    return num.toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 2 });
+  }
+
+  // Escape HTML helper
+  function escapeHtml(text) {
+    return String(text).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+  }
+
+  // Export Table Data to CSV
+  function exportCSV() {
+    const title = document.getElementById('tableTitleInput').value || "Cost_Estimation";
+    let csvContent = `data:text/csv;charset=utf-8,${title}\n`;
+    csvContent += `Section,Instance Name,Specification,Monthly Cost (USD),Amount,Run Time (Month),Total Cost (USD)\n`;
+
+    let totalUSD = 0;
+    currentTableData.forEach(section => {
+      section.rows.forEach(row => {
+        const rowTotal = row.cost * row.amount * row.months;
+        totalUSD += rowTotal;
+        csvContent += `"${section.name}","${row.name}","${row.spec}",${row.cost},${row.amount},${row.months},${rowTotal}\n`;
+      });
+    });
+
+    const rate = parseFloat(document.getElementById('exchangeRateInput').value) || 33.30;
+    const totalTHB = totalUSD * rate;
+
+    csvContent += `\nTotal Cost (2 Years USD),,,,,,${totalUSD}\n`;
+    csvContent += `Total Cost (2 Years THB - Rate ${rate}),,,,,,${totalTHB}\n`;
+
+    const encodedUri = encodeURI(csvContent);
+    const link = document.createElement("a");
+    link.setAttribute("href", encodedUri);
+    link.setAttribute("download", `${title.replace(/[^a-z0-9]/gi, '_').toLowerCase()}.csv`);
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  }
+
+  // Initialize on Load
+  window.onload = function() {
+    loadPresetScenario();
+  };
+</script>
+
+</body>
+</html>
